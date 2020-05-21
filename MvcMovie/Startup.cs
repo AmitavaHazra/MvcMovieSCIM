@@ -1,20 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MvcMovie.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 
 namespace MvcMovie
 {
@@ -41,9 +33,6 @@ namespace MvcMovie
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
             services.AddRazorPages();
-         
-            services.AddDbContext<MvcMovieContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("MvcMovieContext")));
         
     }
 
