@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,18 @@ namespace MvcMovie
         {
             //services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
             //    .AddAzureAD(options => Configuration.Bind("AzureAd", options));
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = Configuration["Scim:TokenIssuer"];
+                    options.Audience = Configuration["Scim:TokenAudience"];
+                });
 
             services.AddControllersWithViews(options =>
             {
@@ -57,8 +70,8 @@ namespace MvcMovie
 
             app.UseRouting();
 
-            //app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
