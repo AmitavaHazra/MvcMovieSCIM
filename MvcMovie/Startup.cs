@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.SCIM;
 using MvcMovie.Data;
+using MvcMovie.Services;
 
 namespace MvcMovie
 {
@@ -21,6 +23,9 @@ namespace MvcMovie
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // These are the important implementations for integrating with Microsoft.SCIM
+            services.AddSingleton<IMonitor, LoggerMonitor>();
+
             //services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
             //    .AddAzureAD(options => Configuration.Bind("AzureAd", options));
 
