@@ -30,6 +30,10 @@ namespace MvcMovie
             services.AddScoped<IProvider, ScimProvider>();
             services.AddScoped<ScimUserProvider>();
 
+            // Important to use Newtonsoft
+            services
+                .AddMvc().AddNewtonsoftJson();
+
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
 
                 .AddAzureAD(options => Configuration.Bind("AzureAd", options))
