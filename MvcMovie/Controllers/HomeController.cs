@@ -1,28 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using MvcMovie.Data;
 using MvcMovie.Models;
+using System.Diagnostics;
+using System.Linq;
 
 namespace MvcMovie.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly UserDataContext _context;
+
+        public HomeController(
+            UserDataContext context,
+                ILogger<HomeController> logger)
         {
+            _context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(new UsersViewModel
+            {
+                Users = _context.Users
+                    .Select(user => (UserViewModel)user)
+                    .ToList()
+            });
         }
 
         public IActionResult Privacy()
