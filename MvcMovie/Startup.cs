@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SCIM;
+using Microsoft.SCIM.WebHostSample.Provider;
 using MvcMovie.Data;
 using MvcMovie.Services;
 
@@ -25,29 +27,22 @@ namespace MvcMovie
         {
             // These are the important implementations for integrating with Microsoft.SCIM
             services.AddSingleton<IMonitor, LoggerMonitor>();
+            services.AddScoped<IProvider, ScimProvider>();
+            services.AddScoped<ScimUserProvider>();
 
-            //services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-            //    .AddAzureAD(options => Configuration.Bind("AzureAd", options));
+            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
 
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(options =>
+                .AddAzureAD(options => Configuration.Bind("AzureAd", options))
+
+                // This adds an scim authentication policy so that
+                // SCIM endpoints have bearer authentication while the
+                // UI has AzureAD authentication
+                .AddJwtBearer("scim", options =>
                 {
                     options.Authority = Configuration["Scim:TokenIssuer"];
                     options.Audience = Configuration["Scim:TokenAudience"];
                 });
 
-            services.AddControllersWithViews(options =>
-            {
-                //var policy = new AuthorizationPolicyBuilder()
-                //    .RequireAuthenticatedUser()
-                //    .Build();
-                //options.Filters.Add(new AuthorizeFilter(policy));
-            });
             services.AddRazorPages();
 
             services.AddDbContext<UserDataContext>(options =>
