@@ -1,8 +1,27 @@
-﻿@{
+﻿@model MvcMovie.Models.UsersViewModel 
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h4>Provisioned users</h4>
+    <table>
+        <thead>
+        <tr>
+            <th>Display Name</th>
+            <th>User Name</th>
+            <th>Active</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.DisplayName</td>
+                <td>@user.UserName</td>
+                <td>@user.Active</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 </div>

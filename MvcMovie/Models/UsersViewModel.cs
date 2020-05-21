@@ -2,7 +2,7 @@
 
 namespace MvcMovie.Models
 {
-    internal class UsersViewModel
+    public class UsersViewModel
     {
         public ICollection<UserViewModel> Users { get; set; }
     }
