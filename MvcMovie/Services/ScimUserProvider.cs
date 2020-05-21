@@ -64,7 +64,7 @@ namespace Microsoft.SCIM.WebHostSample.Provider
 
             string identifier = resourceIdentifier.Identifier;
 
-            if (_context.Users.Find(identifier) is MvcMovie.Models.User deleteUser)
+            if (int.TryParse(identifier, out int id) && _context.Users.Find(id) is MvcMovie.Models.User deleteUser)
             {
                 _context.Users.Remove(deleteUser);
                 await _context.SaveChangesAsync();
@@ -180,20 +180,18 @@ namespace Microsoft.SCIM.WebHostSample.Provider
                 throw new HttpResponseException(HttpStatusCode.Conflict);
             }
 
-            var existingModelUser = _context.Users.Find(user.Identifier);
-            if (existingModelUser == null)
+            if (int.TryParse(user.Identifier, out int id) && _context.Users.Find(id) is MvcMovie.Models.User existingModelUser)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
+                existingModelUser.DisplayName = user.DisplayName;
+                existingModelUser.Active = user.Active;
+                existingModelUser.UserName = user.UserName;
+
+                _context.Update(existingModelUser);
+                await _context.SaveChangesAsync();
+                return user;
             }
 
-            existingModelUser.DisplayName = user.DisplayName;
-            existingModelUser.Active = user.Active;
-            existingModelUser.UserName = user.UserName;
-
-            _context.Update(existingModelUser);
-            await _context.SaveChangesAsync();
-
-            return user;
+            throw new HttpResponseException(HttpStatusCode.NotFound);
         }
 
         public override Task<Resource> RetrieveAsync(IResourceRetrievalParameters parameters, string correlationIdentifier)
@@ -254,7 +252,7 @@ namespace Microsoft.SCIM.WebHostSample.Provider
                 throw new NotSupportedException(unsupportedPatchTypeName);
             }
 
-            if (_context.Users.Find(patch.ResourceIdentifier.Identifier) is MvcMovie.Models.User modelUser)
+            if (int.TryParse(patch.ResourceIdentifier.Identifier, out int id) && _context.Users.Find(id) is MvcMovie.Models.User modelUser)
             {
                 Core2EnterpriseUser scimUser = (Core2EnterpriseUser)modelUser;
                 scimUser.Apply(patchRequest);
