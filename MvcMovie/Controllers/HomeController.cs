@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace MvcMovie.Controllers
 {
+    //[Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
