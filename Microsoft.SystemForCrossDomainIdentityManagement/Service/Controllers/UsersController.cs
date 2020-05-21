@@ -1,12 +1,14 @@
 // Copyright (c) Microsoft Corporation.// Licensed under the MIT license.
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace Microsoft.SCIM
 {
     using Microsoft.AspNetCore.Mvc;
     using System;
 
     [Route(ServiceConstants.RouteUsers)]
-    //[Authorize]
+    [Authorize(AuthenticationSchemes = "scim")]
     [ApiController]
     public sealed class UsersController : ControllerTemplate<Core2EnterpriseUser>
     {

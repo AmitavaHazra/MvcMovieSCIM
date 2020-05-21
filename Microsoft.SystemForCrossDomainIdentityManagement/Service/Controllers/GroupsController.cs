@@ -2,12 +2,12 @@
 
 namespace Microsoft.SCIM
 {
-    using System;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System;
 
     [Route(ServiceConstants.RouteGroups)]
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "scim")]
     [ApiController]
     public sealed class GroupsController : ControllerTemplate<Core2Group>
     {
