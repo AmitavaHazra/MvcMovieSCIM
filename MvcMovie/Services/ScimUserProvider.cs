@@ -215,7 +215,7 @@ namespace Microsoft.SCIM.WebHostSample.Provider
 
             string identifier = parameters.ResourceIdentifier.Identifier;
 
-            if (_context.Users.Find(identifier) is MvcMovie.Models.User modelUser)
+            if (int.TryParse(identifier, out int id) && _context.Users.Find(id) is MvcMovie.Models.User modelUser)
             {
                 return Task.FromResult<Resource>((Core2EnterpriseUser)modelUser);
             }
